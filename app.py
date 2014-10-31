@@ -4,7 +4,7 @@ from pymongo import Connection
 app = Flask(__name__)
 
 conn = Connection()
-logins = conn["logins"]
+db = conn["logins"]
 
 @app.route('/', methods=["GET","POST"])
 def home():
@@ -15,15 +15,14 @@ def home():
 @app.route("/login", methods=["GET","POST"])
 def login():
     if request.method=="GET":
-        return render_template("login.html")
+        return render_template("login.html",error="")
     else:
         # post
         button = request.form["b"]
         uname = request.form["uname"]
         pword = request.form["pword"]
-        valid_user = utils.authenticate(uname,pword)
-        if button=="cancel" or not(valid_user):
-            return render_template("login.html")
+        if(db.logins.find({'uname':uname}) != None):
+            return render_template("login.html",error="Already a user with that name")
         else:
             return render_template("home.html",name=uname)
 
@@ -34,6 +33,8 @@ def signup():
     else:
         d = {'uname':request.form["uname"],
              'pword':request.form["pword"]}
+        db.logins.insert(d)
+        print db.logins.find()
         return render_template("home.html",name=uname)
 
 
