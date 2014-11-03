@@ -22,7 +22,7 @@ def login():
         uname = request.form["uname"]
         pword = request.form["pword"]
         if(db.logins.find({'uname':uname}) != None):
-            return render_template("login.html",error="Already a user with that name")
+            return render_template("login.html",error="That user does not exist!")
         else:
             return render_template("home.html",name=uname)
 
@@ -33,9 +33,12 @@ def signup():
     else:
         d = {'uname':request.form["uname"],
              'pword':request.form["pword"]}
-        db.logins.insert(d)
-        print db.logins.find()
-        return render_template("home.html",name=uname)
+        if(db.logins.find({'uname':uname}) != None):
+            return render_template("login.html",error="That username is already being used.")
+        else:
+            db.logins.insert(d)
+            print db.logins.find()
+            return render_template("home.html",name=uname)
 
 
 
