@@ -6,17 +6,17 @@ app = Flask(__name__)
 conn = Connection()
 db = conn["logins"]
 
+uname=""
+
 @app.route('/', methods=["GET","POST"])
 def home():
-	if request.method=="GET":
-		try:
-			uname = request.form("uname")
-		except:
-			uname=None
+        if(uname==""):
+                return redirect("/login")
+	elif request.method=="GET":
 		return render_template("home.html", name=uname)
 	else:
 		button = request.form["logout"]
-		return render_template("login.html",error="")
+		return redirect("/login")
 
 
 @app.route("/login", methods=["GET","POST"])
@@ -24,14 +24,15 @@ def login():
     if request.method=="GET":
         return render_template("login.html",error="")
     else:
-        # post
-        button = request.form["b"]
         uname = request.form["uname"]
         pword = request.form["pword"]
-        if(db.logins.find({'uname':uname}) != None):
-            return render_template("login.html",error="That user does not exist!")
-        else:
-            return render_template("home.html",name=uname)
+        try:
+                print db.logins.find({'uname':uname, 'pword':pword})[0]
+                print "vvxbxbgji"
+                return redirect("/")
+        except:
+                return render_template("login.html",error="Either username or password is incorrect")
+        #return redirect("/")
 
 @app.route("/signup", methods=["GET","POST"])
 def signup():
@@ -53,8 +54,10 @@ def signup():
 		else:
 			if(pword==pwordcheck):
 				db.logins.insert(d)
+                                uname=request.form["uname"]
+                                pword=request.form["pword"]
 				print db.logins.find()
-				return render_template("home.html",name=uname)
+				return redirect("/")
 			else:
 				return render_template("signup.html", error="Passwords did not match")
 
