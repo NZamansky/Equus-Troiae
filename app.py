@@ -8,8 +8,12 @@ db = conn["logins"]
 
 @app.route('/', methods=["GET","POST"])
 def home():
-    uname = request.form("uname")
-    return render_template("home.html")
+    if request.method=="GET":
+        uname = request.form("uname")
+        return render_template("home.html")
+    else:
+        button = request.form["logout"]
+        return render_template("login.html",error="")
 
 
 @app.route("/login", methods=["GET","POST"])
@@ -29,20 +33,20 @@ def login():
 @app.route("/signup", methods=["GET","POST"])
 def signup():
     if request.method=="GET":
-        return render_template("signup.html")
+        return render_template("signup.html", error="")
     else:
         d = {'uname':request.form["uname"],
-             'pword':request.form["pword"]}
+             'pword':request.form["pword"],
+             'pwordcheck':request.form["pwordcheck"]}
         if(db.logins.find({'uname':uname}) != None):
             return render_template("login.html",error="That username is already being used.")
         else:
-            db.logins.insert(d)
-            print db.logins.find()
-            return render_template("home.html",name=uname)
-
-
-
-
+            if('pword'=='pwordcheck'):
+                db.logins.insert(d)
+                print db.logins.find()
+                return render_template("home.html",name=uname)
+            else:
+                return render_template("signup.html", error="Passwords did not match")
 
 
 
