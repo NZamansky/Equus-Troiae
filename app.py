@@ -40,7 +40,7 @@ def signup():
 	else:
 		d = {'uname':request.form["uname"],
 			'pword':request.form["pword"],
-             'pwordcheck':request.form["pwordcheck"]}
+                     'pwordcheck':request.form["pwordcheck"]}
 		uname=request.form["uname"]
 		pword=request.form["pword"]
 		pwordcheck=request.form["pwordcheck"]
