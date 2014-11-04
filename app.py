@@ -6,33 +6,37 @@ app = Flask(__name__)
 conn = Connection()
 db = conn["logins"]
 
-uname=""
 
 @app.route('/', methods=["GET","POST"])
 def home():
-        if(uname==""):
-                return redirect("/login")
+	if 'uname' not in session and request.method=="GET":
+		return render_template("home.html", loggedIn=False)
 	elif request.method=="GET":
-		return render_template("home.html", name=uname)
+		return render_template("home.html", loggedIn=True, name=session['uname'])
 	else:
-		button = request.form["logout"]
-		return redirect("/login")
+		print "iiiii"
+		try :
+			test = request.form["logout"]
+			session.pop('uname',None)
+			return render_template("home.html", loggedIn=False)
+		except:
+			return redirect("/login")
 
 
 @app.route("/login", methods=["GET","POST"])
 def login():
-    if request.method=="GET":
-        return render_template("login.html",error="")
-    else:
-        uname = request.form["uname"]
-        pword = request.form["pword"]
-        try:
-                print db.logins.find({'uname':uname, 'pword':pword})[0]
-                print "vvxbxbgji"
-                return redirect("/")
-        except:
-                return render_template("login.html",error="Either username or password is incorrect")
-        #return redirect("/")
+	if request.method=="GET":
+		return render_template("login.html",error="")
+	else:
+		uname = request.form["uname"]
+		pword = request.form["pword"]
+		try:
+			print db.logins.find({'uname':uname, 'pword':pword})[0]
+			print "vvxbxbgji"
+			session['uname']=uname
+			return redirect("/")
+		except:
+			return render_template("login.html",error="Either username or password is incorrect")
 
 @app.route("/signup", methods=["GET","POST"])
 def signup():
@@ -54,9 +58,9 @@ def signup():
 		else:
 			if(pword==pwordcheck):
 				db.logins.insert(d)
-                                uname=request.form["uname"]
-                                pword=request.form["pword"]
-				print db.logins.find()
+				uname=request.form["uname"]
+				pword=request.form["pword"]
+				session['uname']=uname
 				return redirect("/")
 			else:
 				return render_template("signup.html", error="Passwords did not match")
@@ -66,5 +70,6 @@ def signup():
 
 
 if __name__=="__main__":
-    app.debug=True
-    app.run();
+	app.debug=True
+	app.secret_key = 'a'
+	app.run();
