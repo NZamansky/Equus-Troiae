@@ -14,7 +14,6 @@ def home():
 	elif request.method=="GET":
 		return render_template("home.html", loggedIn=True, name=session['uname'])
 	else:
-		print "iiiii"
 		try :
 			test = request.form["logout"]
 			session.pop('uname',None)
@@ -32,7 +31,6 @@ def login():
 		pword = request.form["pword"]
 		try:
 			print db.logins.find({'uname':uname, 'pword':pword})[0]
-			print "vvxbxbgji"
 			session['uname']=uname
 			return redirect("/")
 		except:
