@@ -1,5 +1,7 @@
-<body>
+{% extends 'layout.html' %}
 
+{% block body %}
+<fieldset>
 <form method="POST">
   <h2>
     WELCOME!
@@ -8,19 +10,20 @@
   <h3>
     You may sign up here
   </h3>
-    enter your desired username here:
+    Enter your desired username here:
     <br>
     <input type="text" name="uname">
     <br>
-    enter your desired password here:
+    Enter your desired password here:
     <br>
-    <input type="text" name="pword">
+    <input type="password" name="pword">
     <br>
     enter your password again:
     <br>
     <input type="text" name="pwordcheck">
     <br>
-    <input type="submit" name="b" href="/login">
+    <input type="submit" name="b" href="/login" value="Sign Up">
 </form>
+</fieldset>
 
-</body>
+{% endblock %}

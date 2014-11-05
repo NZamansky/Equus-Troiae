@@ -1,5 +1,7 @@
-<body>
+{% extends 'layout.html' %}
 
+{% block body %}
+<fieldset>
 {% if loggedIn %}
   <h2>
     WELCOME to Equus Troiae!
@@ -11,12 +13,12 @@
     Aren't you glad you logged in!?
     <br>
 <form method="POST">
-    <input type="submit" label="logout">
+    <input type="submit" label="logout" value="Log Out">
 </form>
 
 {% else %}
 <h2 font color="#FF0000">You are not logged in.</h1>
-<form method="POST"><input type=submit label="login"></form>
+<form method="POST"><input type=submit label="login" value="Log In"></form>
 {% endif %}
-
-</body>
+</fieldset>
+{% endblock %}

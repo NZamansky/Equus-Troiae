@@ -1,5 +1,7 @@
-<body>
+{% extends 'layout.html' %}
 
+{% block body %}
+<fieldset>
 <form method="POST">
   <h2>
     WELCOME!
@@ -8,16 +10,19 @@
     You may log in here
   </h3> 
 	<font color="#FF0000">{{error}}</font><br>
-    enter your username here: 
+    Enter your username here: 
     <br>
     <input type="text" name="uname">
     <br>
-    enter your password here:
-    <input type="text" name="pword">
+    Enter your password here:
+	<br>
+    <input type="password" name="pword">
     <br>
-    <input type="submit" name="b" href="/">
+    <input type="submit" name="b" href="/" value="Log In">
 </form>
+<br>
+<font size="2">Don't have an account? Sign up <a href="/signup">here</a>!</font>
+</fieldset>
 
-Don't have an account? Sign up <a href="/signup">here</a>!
 
-</body>
+{% endblock %}
