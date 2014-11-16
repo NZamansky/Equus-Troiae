@@ -1,10 +1,21 @@
 from flask import Flask, render_template, session, redirect, request
 from pymongo import Connection
+from functools import wraps
 
 app = Flask(__name__)
 
 conn = Connection()
 db = conn["logins"]
+
+
+def authenticate(func):
+	@wraps(func)
+	def inner(*args):
+		if 'username' not in session:
+			error="You are not logged in"
+		return func(*args)
+	return inner
+		
 
 
 @app.route('/', methods=["GET","POST"])
@@ -23,6 +34,7 @@ def home():
 
 
 @app.route("/login", methods=["GET","POST"])
+@authenticate
 def login():
 	if request.method=="GET":
 		return render_template("login.html",error="")
